@@ -11,7 +11,20 @@ const envGet = (key: string): string | undefined => {
 const url = envGet('VITE_SUPABASE_URL')
 const anonKey = envGet('VITE_SUPABASE_ANON_KEY')
 
-export const supabase: SupabaseClient | null = (url && anonKey) ? createClient(url, anonKey, { auth: { persistSession: true } }) : null
+console.log("SUPABASE URL:", url)
+console.log("SUPABASE KEY:", anonKey)
+
+export const supabase = createClient(
+  url!,
+  anonKey!,
+  {
+    realtime: {
+      params: {
+        eventsPerSecond: 10
+      }
+    }
+  }
+)
 export const isSupabaseLive = !!supabase
 
 export const CLOUDINARY_CLOUD_NAME = envGet('VITE_CLOUDINARY_CLOUD_NAME') || ''
