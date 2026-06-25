@@ -1,6 +1,9 @@
 import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from './supabaseClient'
 
-export async function uploadToCloudinary(file: File, resourceType: 'image' | 'video' | 'auto' = 'auto'): Promise<string> {
+export async function uploadToCloudinary(
+  file: File,
+  resourceType: 'image' | 'video' = 'image'
+): Promise<string> {
   if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
     // Fallback: convert to base64 if Cloudinary not configured (useful for local dev)
     return new Promise((resolve) => {
@@ -12,11 +15,19 @@ export async function uploadToCloudinary(file: File, resourceType: 'image' | 'vi
   const fd = new FormData()
   fd.append('file', file)
   fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET)
-  fd.append('folder', 'andrelulu')
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`, {
+  console.log('Cloud Name:', CLOUDINARY_CLOUD_NAME)
+  console.log('Upload Preset:', CLOUDINARY_UPLOAD_PRESET)
+// fd.append('folder', 'andrelulu')
+  const res = await fetch(
+  `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
     method: 'POST', body: fd,
   })
-  if (!res.ok) throw new Error('Upload ke Cloudinary gagal (' + res.status + ')')
+const errorText = await res.text()
+
+if (!res.ok) {
+  console.error(errorText)
+  throw new Error(errorText)
+}
   const data = await res.json()
   return data.secure_url as string
 }
