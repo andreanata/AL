@@ -14,17 +14,10 @@ const anonKey = envGet('VITE_SUPABASE_ANON_KEY')
 console.log("SUPABASE URL:", url)
 console.log("SUPABASE KEY:", anonKey)
 
-export const supabase = createClient(
-  url!,
-  anonKey!,
-  {
-    realtime: {
-      params: {
-        eventsPerSecond: 10
-      }
-    }
-  }
-)
+export const supabase =
+url && anonKey
+  ? createClient(url, anonKey)
+  : null;
 export const isSupabaseLive = !!supabase
 
 export const CLOUDINARY_CLOUD_NAME = envGet('VITE_CLOUDINARY_CLOUD_NAME') || ''
