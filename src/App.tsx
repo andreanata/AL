@@ -82,16 +82,14 @@ export default function App() {
   useEffect(() => { const t = setTimeout(() => setBooting(false), 1450); return () => clearTimeout(t) }, [])
 
   // In-memory admin session (NO localStorage/sessionStorage per requirement)
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [showAdmin, setShowAdmin] = useState(false)
+ const [isAdmin, setIsAdmin] = useState(() => sessionStorage.getItem('isAdmin') === 'true')
 
   // In-memory state (synced via Supabase Realtime)
-  const [settings, setSettings] = useState<Settings>(DEMO_SETTINGS)
-  const [words, setWords] = useState<LoveWord[]>(DEMO_WORDS)
-  const [photos, setPhotos] = useState<Photo[]>(DEMO_PHOTOS)
-  const [songs, setSongs] = useState<Song[]>(DEMO_SONGS)
-  const [events, setEvents] = useState<EventItem[]>(DEMO_EVENTS)
-  const [realtimeConnected, setRealtimeConnected] = useState(false)
+  const [settings, setSettings] = useState<Settings>(isSupabaseLive ? { ...DEMO_SETTINGS } : DEMO_SETTINGS)
+const [words, setWords] = useState<LoveWord[]>(isSupabaseLive ? [] : DEMO_WORDS)
+const [photos, setPhotos] = useState<Photo[]>(isSupabaseLive ? [] : DEMO_PHOTOS)
+const [songs, setSongs] = useState<Song[]>(isSupabaseLive ? [] : DEMO_SONGS)
+const [events, setEvents] = useState<EventItem[]>(isSupabaseLive ? [] : DEMO_EVENTS)
 
   // --- Initial fetch from Supabase ---
   useEffect(() => {
@@ -106,11 +104,12 @@ export default function App() {
           sb.from('songs').select('*').order('position', { ascending: true }),
           sb.from('events').select('*').order('position', { ascending: true }),
         ])
-        if (s) setSettings({ ...DEMO_SETTINGS, ...s })
-        if (w && w.length) setWords(w as any)
-        if (p && p.length) setPhotos(p as any)
-        if (sg && sg.length) setSongs(sg as any)
-        if (e && e.length) setEvents(e as any)
+      // Line 109–113 (SESUDAH)
+if (s) setSettings({ ...DEMO_SETTINGS, ...s })
+if (w !== null) setWords(w as any)
+if (p !== null) setPhotos(p as any)
+if (sg !== null) setSongs(sg as any)
+if (e !== null) setEvents(e as any)
         setRealtimeConnected(true)
       } catch (err: any) {
         console.warn('Supabase fetch failed, using demo in-memory data:', err?.message)
@@ -615,7 +614,7 @@ export default function App() {
           onUpdateSong={updateSong} onDeleteSong={deleteSong} onAddSong={addSong}
           onUpdateEvent={updateEvent} onDeleteEvent={deleteEvent} onAddEvent={addEvent}
           onUpdateSettings={updateSettings}
-          onSignOut={() => { setIsAdmin(false); setShowAdmin(false); toast('Keluar dari Love Mode 💤') }}
+        onSignOut={() => { setIsAdmin(false); setShowAdmin(false); sessionStorage.removeItem('isAdmin'); toast('Keluar dari Love Mode 💤') }}
         />
         <div className="h-24" />
       </div>
@@ -659,7 +658,8 @@ function LoveButton({ isAdmin, onLogin, onOpenDashboard }: { isAdmin: boolean; o
     try {
       if (pw === ADMIN_PASSWORD) {
         onLogin()
-        toast.success('Love Mode aktif! 💗')
+sessionStorage.setItem('isAdmin', 'true')
+toast.success('Love Mode aktif! 💗')
         setOpen(false); setPw('')
       } else { toast.error('Password salah sayang 🥹') }
     } catch { toast.error('Ada kesalahan') }
