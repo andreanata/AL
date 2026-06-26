@@ -245,15 +245,22 @@ export default function App() {
     toast.success('Event dihapus')
   }
   // ----- Settings
-  const updateSettings = async (patch: Partial<Settings>) => {
-    const next = { ...settings, ...patch }
-    setSettings(next)
-    if (isSupabaseLive && supabase) {
-      const { error } = await supabase.from('settings').update(patch).eq('id', 1)
-      if (error) { toast.error(error.message); return false }
+ const updateSettings = async (patch: Partial<Settings>) => {
+  const next = { ...settings, ...patch }
+  setSettings(next)
+  if (isSupabaseLive && supabase) {
+    // Pakai upsert agar row id=1 dibuat jika belum ada
+    const { error } = await supabase
+      .from('settings')
+      .upsert({ id: 1, ...next }, { onConflict: 'id' })
+    if (error) {
+      toast.error('Gagal simpan: ' + error.message)
+      return false
     }
-    toast.success('Pengaturan tersimpan 💗'); return true
   }
+  toast.success('Pengaturan tersimpan 💗')
+  return true
+}
 
   // ======== Music Player State ========
   const allSongs = useMemo(() => {
