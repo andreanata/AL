@@ -438,7 +438,7 @@ export default function App() {
                 <div className="rounded-[26px] bg-gradient-to-br from-[#ff72b6] to-[#ff4796] text-white p-5 shadow-xl shadow-pink-300/50">
                   <div className="text-[12px] uppercase tracking-widest opacity-90">relationship status</div>
                   <div className="text-[26px] font-extrabold mt-1">Taken, very taken 💍</div>
-                  <p className="text-white/90 text-sm mt-2">Officially {settings.name_a} x {settings.name_b}. Bucin since 2022. Realtime across all devices.</p>
+                  <p className="text-white/90 text-sm mt-2">Officially {settings.name_a} x {settings.name_b}. Bucin since 2022.</p>
                   <div className="flex gap-2 mt-4 text-xs font-bold flex-wrap">
                     <span className="px-3 py-1.5 rounded-full bg-white/20">💌 daily love notes</span>
                     <span className="px-3 py-1.5 rounded-full bg-white/20">🎵 shared playlist</span>
