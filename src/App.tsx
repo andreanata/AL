@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Heart, Music2, Image as ImageIcon, BookHeart, Sparkles, Play, Pause, SkipBack, SkipForward, Volume2, LogOut, Plus, Send, X, Link as LinkIcon, CalendarDays, MapPin, Cherry, Pencil, Trash2, Save, ShieldCheck, Upload, Shuffle, Minimize2, Maximize2 } from 'lucide-react'
 import { Toaster, toast } from 'sonner'
-import { supabase, isSupabaseLive, ADMIN_PASSWORD } from './lib/supabaseClient'
-import { uploadToCloudinary } from './lib/cloudinary'
+import { supabase, isSupabaseLive, ADMIN_PASSWORD } from './supabaseClient'
+import { uploadToCloudinary } from './cloudinary'
 
 // ---- Types (map to new Supabase schema)
 type LoveWord = { id: string; text: string; author: 'Andre' | 'Lulu' | string; mood?: string; image_url?: string | null; created_at: string }
