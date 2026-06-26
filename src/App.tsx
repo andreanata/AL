@@ -85,11 +85,14 @@ export default function App() {
  const [isAdmin, setIsAdmin] = useState(() => sessionStorage.getItem('isAdmin') === 'true')
 
   // In-memory state (synced via Supabase Realtime)
-  const [settings, setSettings] = useState<Settings>(isSupabaseLive ? { ...DEMO_SETTINGS } : DEMO_SETTINGS)
+const [isAdmin, setIsAdmin] = useState(() => sessionStorage.getItem('isAdmin') === 'true')
+const [showAdmin, setShowAdmin] = useState(false)
+const [settings, setSettings] = useState<Settings>(isSupabaseLive ? { ...DEMO_SETTINGS } : DEMO_SETTINGS)
 const [words, setWords] = useState<LoveWord[]>(isSupabaseLive ? [] : DEMO_WORDS)
 const [photos, setPhotos] = useState<Photo[]>(isSupabaseLive ? [] : DEMO_PHOTOS)
 const [songs, setSongs] = useState<Song[]>(isSupabaseLive ? [] : DEMO_SONGS)
 const [events, setEvents] = useState<EventItem[]>(isSupabaseLive ? [] : DEMO_EVENTS)
+const [realtimeConnected, setRealtimeConnected] = useState(false)  // ← WAJIB ADA
 
   // --- Initial fetch from Supabase ---
   useEffect(() => {
