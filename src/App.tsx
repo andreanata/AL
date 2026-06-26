@@ -85,15 +85,17 @@ export default function App() {
  const [isAdmin, setIsAdmin] = useState(() => sessionStorage.getItem('isAdmin') === 'true')
 
   // In-memory state (synced via Supabase Realtime)
+// Admin session (persist via sessionStorage agar tidak logout saat refresh)
 const [isAdmin, setIsAdmin] = useState(() => sessionStorage.getItem('isAdmin') === 'true')
 const [showAdmin, setShowAdmin] = useState(false)
+
+// State data (kosong jika Supabase aktif, demo jika tidak)
 const [settings, setSettings] = useState<Settings>(isSupabaseLive ? { ...DEMO_SETTINGS } : DEMO_SETTINGS)
 const [words, setWords] = useState<LoveWord[]>(isSupabaseLive ? [] : DEMO_WORDS)
 const [photos, setPhotos] = useState<Photo[]>(isSupabaseLive ? [] : DEMO_PHOTOS)
 const [songs, setSongs] = useState<Song[]>(isSupabaseLive ? [] : DEMO_SONGS)
 const [events, setEvents] = useState<EventItem[]>(isSupabaseLive ? [] : DEMO_EVENTS)
-const [realtimeConnected, setRealtimeConnected] = useState(false)  // ← WAJIB ADA
-
+const [realtimeConnected, setRealtimeConnected] = useState(false)
   // --- Initial fetch from Supabase ---
   useEffect(() => {
     if (!isSupabaseLive || !supabase) return
@@ -108,7 +110,6 @@ const [realtimeConnected, setRealtimeConnected] = useState(false)  // ← WAJIB 
           sb.from('events').select('*').order('position', { ascending: true }),
         ])
       // Line 109–113 (SESUDAH)
-if (s) setSettings({ ...DEMO_SETTINGS, ...s })
 if (w !== null) setWords(w as any)
 if (p !== null) setPhotos(p as any)
 if (sg !== null) setSongs(sg as any)
@@ -617,7 +618,7 @@ if (e !== null) setEvents(e as any)
           onUpdateSong={updateSong} onDeleteSong={deleteSong} onAddSong={addSong}
           onUpdateEvent={updateEvent} onDeleteEvent={deleteEvent} onAddEvent={addEvent}
           onUpdateSettings={updateSettings}
-        onSignOut={() => { setIsAdmin(false); setShowAdmin(false); sessionStorage.removeItem('isAdmin'); toast('Keluar dari Love Mode 💤') }}
+       onSignOut={() => { setIsAdmin(false); setShowAdmin(false); sessionStorage.removeItem('isAdmin'); toast('Keluar dari Love Mode 💤') }}
         />
         <div className="h-24" />
       </div>
