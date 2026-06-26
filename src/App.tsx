@@ -87,7 +87,6 @@ export default function App() {
   // In-memory state (synced via Supabase Realtime)
 // Admin session (persist via sessionStorage agar tidak logout saat refresh)
 const [isAdmin, setIsAdmin] = useState(() => sessionStorage.getItem('isAdmin') === 'true')
-const [showAdmin, setShowAdmin] = useState(false)
 
 // State data (kosong jika Supabase aktif, demo jika tidak)
 const [settings, setSettings] = useState<Settings>(isSupabaseLive ? { ...DEMO_SETTINGS } : DEMO_SETTINGS)
